@@ -1,8 +1,14 @@
-import json
-import pyautogui as py
+from json import load
+from pynput.mouse import Controller as mouse, Button as b
+from pynput.keyboard import Controller as keyboard
+from pynput.keyboard import Key
 from time import sleep
 from tkinter import *
 from tkinter.messagebox import askokcancel
+
+keyboard = keyboard()
+mouse = mouse()
+
 
 # First Monitor: Point(x=855, y=997)
 # Second Monitor: Point(x=2745, y=997)
@@ -17,16 +23,18 @@ def center_window(w, h):
 
 def getNames(filename):
     with open(filename, "r") as f:
-        return json.load(f)
+        return load(f)
 def checkHours(names, timeToSleep):
     checking.config(text="Checking...")
     startButton.config(state=DISABLED)
     root.update_idletasks()
     for discord_id in names["names"]:
         checking.pack(pady=20)
-        py.click(x=2745, y=997)
-        py.typewrite(f"--rank <@{discord_id}>")
-        py.press("Enter")
+        mouse.position = (2745, 997)
+        mouse.click(b.left, 1)
+        keyboard.type(f"--rank <@{discord_id}>")
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
         sleep(timeToSleep)
     checking.config(text="Done!")
     startButton.config(state=NORMAL)
@@ -57,5 +65,3 @@ tm = Label(root, text="Made by xYarin", font=('helvetica', 12, "underline"))
 tm.place(x=5, y=0)
 
 root.mainloop()
-
-
